@@ -2,8 +2,9 @@ import User from '../entities/User.js';
 
 class UserSignUp {
   constructor(userRepository) {
-    this.userRepository = userRepository;
-  }
+    this.userRepository = userRepository
+  } 
+
 
   async execute(userDetails) {
     // Add validation logic if necessary

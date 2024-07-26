@@ -2,6 +2,7 @@ import UserModel from '../../infrastructure/db/mongoose.js';
 import User from '../../domain/entities/User.js';
 
 class UserRepository {
+
   async createUser(userDetails) {
     const user = new UserModel(userDetails);
     await user.save(); 
