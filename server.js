@@ -13,10 +13,10 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use('/users', userRoutes);
-app.use('/workers',)
+app.use('/workers',workerRoutes)
 
 mongoose.connect(DB_URL)
   .then(() => {console.log('MongoDB connected')
-  app.listen(PORT, () => console.log('Server running on port 3000'));
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })
 .catch(err => console.log(err));

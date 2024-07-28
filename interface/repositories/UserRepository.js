@@ -4,9 +4,12 @@ import User from '../../domain/entities/User.js';
 class UserRepository {
 
   async createUser(userDetails) {
-    const user = new UserModel(userDetails);
+    console.log('details = ', userDetails)
+    const data = JSON.parse(userDetails)
+    const user = new UserModel(data)
+    console.log('user = ',user)
     await user.save(); 
-    return new User(user.toObject());
+    return user
   }
 
   async findUserByEmail(email) {
@@ -14,7 +17,7 @@ class UserRepository {
     if(user){
        return new User(user.toObject());
     }
-    return null
+    return nullg
   }
 }
 
