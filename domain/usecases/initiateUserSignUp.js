@@ -18,10 +18,11 @@
 // export default InitialSignUp
 
 class InitialSignUp {
-    constructor({ userRepository, otpService, redisClient }) {
+    constructor({ userRepository, otpService, redisClient, bcrypt }) {
         this.userRepository = userRepository;
         this.otpService = otpService;
         this.redisClient = redisClient;
+        this.bcrypt = bcrypt
     }
 
     async execute(userData) {
@@ -32,7 +33,8 @@ class InitialSignUp {
             }
             console.log(userData)
             const otp = await this.otpService(userData.email)
-
+            const hashPass = await this.bcrypt.hash(userData.pass, 10);
+            userData.pass = hashPass
             const userDataString = JSON.stringify(userData);
 
             await this.redisClient.set('userData', userDataString);

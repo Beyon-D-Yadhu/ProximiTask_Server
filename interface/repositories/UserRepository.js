@@ -17,7 +17,7 @@ class UserRepository {
     if(user){
        return new User(user.toObject());
     }
-    return nullg
+    return null
   }
 }
 

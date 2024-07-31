@@ -5,6 +5,8 @@ import client from "../../config/redisClient.js";
 import InitialSignUp from "../../domain/usecases/initiateUserSignUp.js";
 import { trusted } from "mongoose";
 import otpService from "../../services/otpService.js";
+import bcrypt from 'bcryptjs'
+import jwt from "../../utils/jwt.js";
 
 const userRepository = new UserRepository();
 
@@ -17,13 +19,14 @@ const initiateRegistration = async (req, res) => {
     userRepository: new UserRepository(),
     otpService: otpService,
     redisClient: client,
+    bcrypt
   });
 
   initialSignUp
     .execute(userData)
     .then((response) => {
       console.log('res = ',response);
-      res.status(response.status).json({success:response.success,message:response.message})
+      res.status(response.status).json({success:response.success, message:response.message})
     })
     .catch((error) => {
       console.error('error promise = ',error);
@@ -43,7 +46,9 @@ const signUp = async (req, res) => {
   const userSignUp = new UserSignUp(userRepository);
   try {
     const user = await userSignUp.execute(data);
+    console.log('going to send response')
     res.status(201).json({ success: true });
+    console.log('response send')
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -56,8 +61,12 @@ const login = async (req, res) => {
   try {
     const user = await userLogin.execute(req.body);
     console.log(user);
-    res.status(200).json({ success: true, user: user });
+    const refreshToken = jwt.generateRefreshToken(req.body.email)
+    const accessToken = jwt.generateAccessToken(req.body.email)
+    console.log(`access token = ${accessToken}, refresh Token = ${refreshToken}`)
+    res.status(200).json({ success: true, user: user, refreshToken, accessToken });
   } catch (error) {
+    console.log('err:',error)
     res.status(400).json({ error: error.message });
   }
 };
